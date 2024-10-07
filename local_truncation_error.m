@@ -4,14 +4,16 @@ function local_truncation_error()
     % regression to solve for k and p values of error
 
     % controlled variables for rate_func01
-    t1 = 1;
-    X01 = 1;
+    t1 = 5;
+    X01 = 3;
+
+    % solve for analytical solution for rate_func01
+    X01_sol = solution01(t1);
 
     % controlled variables for rate_func02
     t2 = 5;
     X02 = [1;0];
-    
-    X_t = solution01(t1);
+
 
     % a vector of 100 equally spaced h_ref values from 10e-5 to 10e1 we
     % will solve our integration functions
@@ -29,8 +31,8 @@ function local_truncation_error()
     % particular h value for epsilon = |G(t, X(t), h) - X(t+h)|
     for i = 1:length(h_refs)
         % X_next with the midpoint and euer method
-        [X_next_midpoint, ~] = explicit_midpoint_step(@rate_func01, t1, X01, h_refs(i));
-        [X_next_euler, ~] = forward_euler_step(@rate_func01, t1, X01, h_refs(i));
+        [X_next_midpoint, ~] = explicit_midpoint_step(@rate_func01, t1, X01_sol, h_refs(i));
+        [X_next_euler, ~] = forward_euler_step(@rate_func01, t1, X01_sol, h_refs(i));
         
         % solving for the analytical solution
         X_sol(i) = solution01(t1 + h_refs(i));
@@ -38,9 +40,10 @@ function local_truncation_error()
         % solving for the error of the three methods
         midpoint_errors(i) = norm(X_next_midpoint - X_sol(i));
         euler_errors(i) = norm(X_next_euler - X_sol(i));
-        analytical(i) = norm(X_sol(i) - X_t);
+        analytical(i) = norm(X_sol(i) - X01_sol); 
+            % ^^ shouldn't this error always be zero because this is what we're comparing to?
     end
-
+        
     % using provided log regression function to solve for each method's p
     % and k values
     [p_midpoint, k_midpoint] = loglog_fit(h_refs, midpoint_errors);
@@ -48,20 +51,20 @@ function local_truncation_error()
     [p_analytical, k_analytical] = loglog_fit(h_refs, analytical);
 
      % and now solving lines of best fit
-    fit_line_x = 10e-5:0.1:10e1;
+    fit_line_x = 10e-7:0.1:10e1;
     fit_line_midpoint = k_midpoint*fit_line_x.^p_midpoint;
     fit_line_euler = k_euler*fit_line_x.^p_euler;
     fit_line_analytical = k_analytical*fit_line_x.^p_analytical;
 
     
     % plotting errors on a log scale
-    clf
+    clf;
     
     % plotting calculated data
-    loglog(h_refs, midpoint_errors, 'ro','markerfacecolor','r','markersize',1)
+    loglog(h_refs, midpoint_errors, 'ro','markerfacecolor','r','markersize',2)
     hold on
-    loglog(h_refs, euler_errors, 'bo','markerfacecolor','r','markersize',1)
-    loglog(h_refs, analytical, 'go', 'markerfacecolor', 'g', 'markersize', 1)
+    loglog(h_refs, euler_errors, 'bo','markerfacecolor','r','markersize',2)
+    loglog(h_refs, analytical, 'go', 'markerfacecolor', 'g', 'markersize', 2)
     
     % plotting lines of best fit
     loglog(fit_line_x, fit_line_midpoint, 'c-','markerfacecolor','r','markersize',1)
