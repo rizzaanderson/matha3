@@ -1,7 +1,7 @@
 function [t_list,X_list,h_avg, num_evals] = ...
-explicit_midpoint_fixed_step_integration(rate_func_in,tspan,X0,h_ref)
+implicit_midpoint_fixed_step_integration(rate_func_in,tspan,X0,h_ref)
 
-    % Runs numerical integration using explicit midpoint approximation
+    % Runs numerical integration using implicit midpoint approximation
     
     % INPUTS:
     % rate_func_in: the function used to compute dXdt. rate_func_in will
@@ -26,18 +26,16 @@ explicit_midpoint_fixed_step_integration(rate_func_in,tspan,X0,h_ref)
     t_list = linspace(tspan(1), tspan(2), N);
 
     % establishing the size of X_list 
-    X_list = zeros(N, length(X0));
+    X_list = zeros(length(X0), N);
 
     % making the first value of X_list X0
-    X_list(1, :) = transpose(X0);
+    X_list(:, 1) = (X0);
 
     num_evals = 0;
 
     for i = 2:N
-        X_N = X_list(i,:);
-        [X_next, eval] = explicit_midpoint_step(rate_func_in, t_list(i), transpose(X_N), h_avg);
-        X_list(i,:) = X_next;
+        [X_next, eval] = implicit_midpoint_step(rate_func_in, t_list(i), X_list(:,i-1), h_avg);
+        X_list(:,i) = X_next;
         num_evals = num_evals + eval;
     end
-    
 end
