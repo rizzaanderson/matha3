@@ -18,14 +18,14 @@ Runs numerical integration using forward Euler approximation
     h_avg = (tspan(2) - tspan(1))/N;
         
     t_list = linspace(tspan(1), tspan(2), N);
-    X_list = zeros(length(t_list),length(X0));
-    X_list(1,:) = transpose(X0);
+    X_list = zeros(length(X0), length(t_list));
+    X_list(:, 1) = X0;
 
     num_evals = 0;
     
     for i = 2:length(t_list)
-        [X_next, step_evals] = forward_euler_step(rate_func_in,t_list(i),X_list(i-1),h_avg);
-        X_list(i) = X_next;
+        [X_next, step_evals] = forward_euler_step(rate_func_in,t_list(i),X_list(:, i-1),h_avg);
+        X_list(:,i) = X_next;
         num_evals = num_evals + step_evals;
     end
     
