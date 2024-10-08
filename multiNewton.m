@@ -1,4 +1,3 @@
-
 function [root, num_evals] = multiNewton(test_function01,X0,varargin)
     %{
     arguements    
