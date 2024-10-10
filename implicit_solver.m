@@ -15,17 +15,15 @@ function implicit_solver()
     
     % solving over a time span
     [t_list,X_list,h_avg, num_evals] = ...
-    implicit_midpoint_fixed_step_integration(@rate_func01,tspan,X0,h_ref);
+    implicit_midpoint_fixed_step_integration(@rate_func02,tspan,X0,h_ref);
 
     % looping through different values of h
     h = linspace(10e-5, 10e-2, 7)
 
-    % setting up plot
+    % setting up plot for multiple h values
     clf;
     
     legendStrings = "h = " + string(h)
-    
-    
     for i = 1:length(h)
         
         [t_plot, X_plot, ~, ~] = implicit_midpoint_fixed_step_integration(@rate_func01,tspan,X0,h(i));
