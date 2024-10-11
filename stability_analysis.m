@@ -87,46 +87,46 @@ function stability_analysis()
      [exmid_t45, exmid_X45, ~, ~] = explicit_midpoint_fixed_step_integration...
          (@rate_func01, tspan, X0, h45);
 
-     % plotting each method against the solution
-     tile_plot45 = tiledlayout(2,2);
-     title(tile_plot45, 'Comparing Stabiliy for h_{ref} = 0.45')
-     xlabel(tile_plot45, 't [s]')
-     ylabel(tile_plot45, 'X [m]')
-
-
-     nexttile
-     axis([0 20 -1.5 1.5])
-     plot(t_sol, X_sol)
-     hold on
-     plot(forward_t45, forward_X45)
-     hold off
-     title('Foward Euler')
-     legend('numerical', 'analytical', 'location', 'nw')
-
-     nexttile
-     axis([0 20 -1.5 1.5])
-     plot(t_sol, X_sol)
-     hold on
-     plot(backward_t45, backward_X45)
-     hold off
-     title('Backward Euler')
-     legend('numerical', 'analytical', 'location', 'nw')
-
-     nexttile
-     axis([0 20 -1.5 1.5])
-     plot(t_sol, X_sol)
-     hold on
-     plot(exmid_t45, exmid_X45)
-     hold off
-     title('Explicit Midpoint')
-     legend('numerical', 'analytical', 'location', 'nw')
-
-     nexttile
-     axis([0 20 -1.5 1.5])
-     plot(t_sol, X_sol)
-     hold on
-     plot(immid_t45, immid_X45)
-     hold off
-     title('Implicit Midpoint')
-     legend('numerical', 'analytical', 'location', 'nw')
+     % % plotting each method against the solution
+     % tile_plot45 = tiledlayout(2,2);
+     % title(tile_plot45, 'Comparing Stabiliy for h_{ref} = 0.45')
+     % xlabel(tile_plot45, 't [s]')
+     % ylabel(tile_plot45, 'X [m]')
+     % 
+     % 
+     % nexttile
+     % axis([0 20 -1.5 1.5])
+     % plot(t_sol, X_sol)
+     % hold on
+     % plot(forward_t45, forward_X45)
+     % hold off
+     % title('Foward Euler')
+     % legend('numerical', 'analytical', 'location', 'nw')
+     % 
+     % nexttile
+     % axis([0 20 -1.5 1.5])
+     % plot(t_sol, X_sol)
+     % hold on
+     % plot(backward_t45, backward_X45)
+     % hold off
+     % title('Backward Euler')
+     % legend('numerical', 'analytical', 'location', 'nw')
+     % 
+     % nexttile
+     % axis([0 20 -1.5 1.5])
+     % plot(t_sol, X_sol)
+     % hold on
+     % plot(exmid_t45, exmid_X45)
+     % hold off
+     % title('Explicit Midpoint')
+     % legend('numerical', 'analytical', 'location', 'nw')
+     % 
+     % nexttile
+     % axis([0 20 -1.5 1.5])
+     % plot(t_sol, X_sol)
+     % hold on
+     % plot(immid_t45, immid_X45)
+     % hold off
+     % title('Implicit Midpoint')
+     % legend('numerical', 'analytical', 'location', 'nw')
 end

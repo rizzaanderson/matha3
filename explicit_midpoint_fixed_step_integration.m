@@ -38,5 +38,4 @@ explicit_midpoint_fixed_step_integration(rate_func_in,tspan,X0,h_ref)
         X_list(:,i) = X_next;
         num_evals = num_evals + eval;
     end
-    
 end

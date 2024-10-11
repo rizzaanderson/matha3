@@ -16,7 +16,7 @@ function [XB,num_evals] = implicit_midpoint_step(rate_func_in,t,XA,h)% This func
     
     % creating a wrapper function to solve the derivate, f(t + h/2, 1/2*XA
     % + X_next) but X_next is unknown
-    root_func = @(X_next) XA + h*rate_func_in(t + h/2, 1/2*XA + X_next) - X_next;
+    root_func = @(X_next) XA + h*rate_func_in(t + h/2, 1/2*(XA + X_next)) - X_next;
     
     % using our multidimensional Newton function to solve for XB, the root
     % of the function, G
