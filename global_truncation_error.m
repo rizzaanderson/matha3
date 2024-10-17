@@ -11,14 +11,14 @@ function global_truncation_error()
     X02 = [1;0];
     
     % set funciton number
-    X0 = X02;
-    rate_func = @rate_func02;
-    X_f = solution02(tspan(2));
+    X0 = X01;
+    rate_func = @rate_func01;
+    X_f = solution01(tspan(2));
 
     % a vector of 100 equally spaced h_ref values from 10e-5 to 10e1 we
     % will solve our integration functions
     num_h_vals = 50;
-    h_refs = logspace(-4, 1, num_h_vals);
+    h_refs = logspace(-5, 1, num_h_vals);
 
     % establishing the size of the vectors we will store the error for a
     % given h value
@@ -27,7 +27,7 @@ function global_truncation_error()
     imp_midpoint_errors = zeros(length(h_refs),1);
     imp_euler_errors = zeros(length(h_refs),1);
     
-    total_num_evals = zeros(length(h_refs),4);
+    total_num_evals = zeros(length(h_refs));
 
     % for loop to the final X values for the three methods to solve for the
     % global error, epsilon = |X_f - X(t_f)| for different values of h
@@ -39,18 +39,18 @@ function global_truncation_error()
         [~, X_imp_euler_list, ~, num_evals_imp_euler] = backward_euler_fixed_step_integration(rate_func, tspan, X0, h_refs(i));
         
         % pulling out the final X value
-        X_f_exp_midpoint = X_exp_midpoint_list(end);
-        X_f_exp_euler = X_exp_euler_list(end);
-        X_f_imp_midpoint = X_imp_midpoint_list(end);
-        X_f_imp_euler = X_imp_euler_list(end);
+        X_f_exp_midpoint = X_exp_midpoint_list(:, end);
+        X_f_exp_euler = X_exp_euler_list(:, end);
+        X_f_imp_midpoint = X_imp_midpoint_list(:, end);
+        X_f_imp_euler = X_imp_euler_list(:, end);
 
         % calcualting the error
-        exp_midpoint_errors(i) = norm(X_f_exp_midpoint-X_f);
-        exp_euler_errors(i) = norm(X_f_exp_euler- X_f);
-        imp_midpoint_errors(i) = norm(X_f_imp_midpoint-X_f);
-        imp_euler_errors(i) = norm(X_f_imp_euler- X_f);
+        exp_midpoint_errors(i, :) = norm(X_f_exp_midpoint-X_f);
+        exp_euler_errors(i, :) = norm(X_f_exp_euler- X_f);
+        imp_midpoint_errors(i, :) = norm(X_f_imp_midpoint-X_f);
+        imp_euler_errors(i, :) = norm(X_f_imp_euler- X_f);
         
-        total_num_evals(i,:) = [num_evals_exp_midpoint, num_evals_exp_euler, num_evals_imp_midpoint, num_evals_imp_euler];
+        total_num_evals(i) = num_evals_exp_midpoint;
         
     end
     
@@ -59,12 +59,10 @@ function global_truncation_error()
     filter_params.min_xval = 10e-4;
     filter_params.max_xval = 10e-2;
     
-    total_num_evals
-    
     [p_exp_midpoint, k_exp_midpoint] = loglog_fit(h_refs, exp_midpoint_errors, filter_params)
-    [p_exp_euler, k_exp_euler] = loglog_fit(h_refs, exp_euler_errors, filter_params)
-    [p_imp_midpoint, k_imp_midpoint] = loglog_fit(h_refs, imp_midpoint_errors)
-    [p_imp_euler, k_imp_euler] = loglog_fit(h_refs, imp_euler_errors)
+    [p_exp_euler, k_exp_euler] = loglog_fit(h_refs, exp_euler_errors, filter_params, filter_params)
+    [p_imp_midpoint, k_imp_midpoint] = loglog_fit(h_refs, imp_midpoint_errors, filter_params)
+    [p_imp_euler, k_imp_euler] = loglog_fit(h_refs, imp_euler_errors, filter_params)
 
      % and now solving lines of best fit
     fit_line_x = 10e-5:0.1:10e1;
@@ -116,8 +114,8 @@ function global_truncation_error()
         loglog(total_num_evals(:,1), exp_euler_errors, 'bo','markerfacecolor','b','markersize',2)
 
         % plotting lines of best fit
-        filter_params.min_xval = 10e4;
-        filter_params.max_xval = 10e5;
+        filter_params.min_xval = 10e2;
+        filter_params.max_xval = 10e4;
         
         [p_midpoint_evals_exp, k_midpoint_evals_exp] = loglog_fit(total_num_evals(:,1), exp_midpoint_errors, filter_params)
         [p_euler_evals_exp, k_euler_evals_exp] = loglog_fit(total_num_evals(:,1), exp_euler_errors, filter_params)
